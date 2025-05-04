@@ -1,82 +1,45 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 // images
 import Image from "next/image";
-import phoneImage from "@/assets/images/appointment-discount-phone-mockup.png";
-import smritiLogo from "@/assets/images/smriti-Logo.png";
 import sLetterImg from "@/assets/images/s-letter.png";
+import sLetterDarkImg from "@/assets/images/s-letter-darkTheme.png";
+import { useTheme } from "next-themes";
 
 const navigation = [
   { name: "Services", href: "#" },
   { name: "Testimonials", href: "#testimonials" },
-  { name: "Appointments", href: "#" },
+  { name: "Appointments", href: "/booking" },
   { name: "Contact Us", href: "#contact" },
   { name: "About Us", href: "#" },
+  { name: "Admin", href: "/admin" },
 ];
 
 function Navbar() {
-  const { setTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, resolvedTheme } = useTheme();
+  const [navImg, setNavImg] = useState(sLetterImg);
+
+  useEffect(() => {
+    resolvedTheme === "dark"
+      ? setNavImg(sLetterDarkImg)
+      : setNavImg(sLetterImg);
+  });
 
   return (
     <>
       <nav
         aria-label="Global"
-        className="flex items-center justify-between p-6 lg:px-8"
+        className="flex items-center justify-between p-6 lg:px-8 lg:dark:bg-gray-900"
       >
-        {/* <Link href="/">Home</Link>
-        <Link href="/booking">Book</Link>
-        <Link href="/admin">Admin</Link>
-        <div className="absolute right-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Sun
-                  className="h-[1.2rem] w-[1.2rem] rotate-0 scale-120 transition-all
-                translate-y-0  dark:-rotate-90
-                dark:translate-y-full dark:scale-0 fill-[#FFCC33] text-[#FFCC33] 
-                duration-1000
-                "
-                />
-                <Moon
-                  className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all
-                translate-y-full  dark:rotate-0 
-                dark:translate-y-0 dark:scale-120 fill-[#FFCC33] text-[#FFCC33]
-                duration-1000 "
-                />
-                <span className="sr-only">Toggle theme</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setTheme("light")}>
-                Light
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("dark")}>
-                Dark
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("system")}>
-                System
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div> */}
         <div className="flex lg:flex-1">
           <a href="#" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <Image alt="S Letter" src={sLetterImg} className="h-8 w-auto" />
+            <Image alt="S Letter" src={navImg} className="h-8 w-auto" />
           </a>
         </div>
         <div className="flex lg:hidden">
@@ -89,23 +52,152 @@ function Navbar() {
             <Bars3Icon aria-hidden="true" className="size-6" />
           </button>
         </div>
-        <div className="hidden lg:flex lg:gap-x-12">
+        <div className="hidden lg:flex lg:gap-x-12  lg:items-center ">
           {navigation.map((item) => (
-            <a
+            <Link
               key={item.name}
               href={item.href}
-              className="text-sm/6 font-semibold text-gray-900"
+              className="text-sm/6 font-semibold text-gray-900  lg:dark:text-slate-500
+              lg:dark:hover:opacity-[.9]
+              hover:text-gray-500
+
+              transition-all
+              duration-200
+              "
             >
               {item.name}
-            </a>
+            </Link>
           ))}
         </div>
+
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="#" className="text-sm/6 font-semibold text-gray-900">
+          <Link
+            href="#"
+            className="text-sm/6 font-semibold text-gray-900  lg:dark:text-slate-500
+              lg:dark:hover:opacity-[.9]
+              hover:text-gray-500
+
+              transition-all
+              duration-200
+          "
+          >
             Log in <span aria-hidden="true">&rarr;</span>
-          </a>
+          </Link>
         </div>
       </nav>
+      {/* <Dialog
+        open={mobileMenuOpen}
+        onClose={setMobileMenuOpen}
+        className="lg:hidden"
+      >
+        <div className="fixed inset-0 z-50" />
+        <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+          <div className="flex items-center justify-between">
+            <a href="#" className="-m-1.5 p-1.5">
+              <span className="sr-only">Your Company</span>
+              <Image alt="" src={sLetterImg} className="h-8 w-auto" />
+            </a>
+
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(false)}
+              className="-m-2.5 rounded-md p-2.5 text-gray-700"
+            >
+              <span className="sr-only">Close menu</span>
+              <XMarkIcon aria-hidden="true" className="size-6" />
+            </button>
+          </div>
+          <div className="mt-6 flow-root">
+            <div className="-my-6 divide-y divide-gray-500/10">
+              <div className="space-y-2 py-6">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+              <div className="py-6">
+                <a
+                  href="#"
+                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                >
+                  Log in
+                </a>
+              </div>
+            </div>
+          </div>
+        </DialogPanel>
+      </Dialog> */}
+      <Dialog
+        open={mobileMenuOpen}
+        onClose={setMobileMenuOpen}
+        className="lg:hidden"
+      >
+        <div className="fixed inset-0 z-50" />
+        <DialogPanel
+          className={`fixed inset-y-0 right-0 z-50 w-full overflow-y-auto px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 ${
+            theme === "dark"
+              ? "bg-gray-900 text-slate-500"
+              : "bg-white text-gray-900"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <a href="#" className="-m-1.5 p-1.5">
+              <span className="sr-only">Your Company</span>
+              <Image alt="S Letter" src={sLetterImg} className="h-8 w-auto" />
+            </a>
+
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`-m-2.5 rounded-md p-2.5 ${
+                theme === "dark" ? "text-slate-300" : "text-gray-700"
+              }`}
+            >
+              <span className="sr-only">Close menu</span>
+              <XMarkIcon aria-hidden="true" className="size-6" />
+            </button>
+          </div>
+
+          <div className="mt-6 flow-root">
+            <div className="-my-6 divide-y divide-gray-500/10">
+              <div className="space-y-2 py-6">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold transition-all duration-200 ${
+                      theme === "dark"
+                        ? "text-slate-500 hover:opacity-90"
+                        : "text-gray-900 hover:bg-gray-50"
+                    }`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+              <div className="py-6">
+                <a
+                  href="#"
+                  className={`-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold transition-all duration-200 ${
+                    theme === "dark"
+                      ? "text-slate-500 hover:opacity-90"
+                      : "text-gray-900 hover:bg-gray-50"
+                  }`}
+                >
+                  Log in
+                </a>
+              </div>
+            </div>
+          </div>
+        </DialogPanel>
+      </Dialog>
     </>
   );
 }
