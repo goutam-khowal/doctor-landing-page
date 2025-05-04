@@ -1,18 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 // Add other necessary imports here
 import { Button } from "@/components/ui/button";
 import Navbar from "./Navbar";
+import { DatePickerWithPresets } from "./DatePicker";
 
 export default function BookingForm() {
+  const [date, setDate] = useState<Date>();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     appointmentDate: "",
   });
+
+  useEffect(() => {
+    if (date) {
+      const formattedDate = date.toLocaleDateString();
+      setFormData((prev) => ({ ...prev, appointmentDate: formattedDate }));
+    }
+  }, [date]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +40,7 @@ export default function BookingForm() {
       phone: "",
       appointmentDate: "",
     });
+    setDate(undefined);
   };
 
   return (
@@ -116,15 +126,7 @@ export default function BookingForm() {
             >
               Appointment Date
             </label>
-            <input
-              type="date"
-              id="appointmentDate"
-              name="appointmentDate"
-              value={formData.appointmentDate}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
+            <DatePickerWithPresets date={date} setDate={setDate} />
           </div>
 
           <div className="mt-6 flex items-center justify-center">
