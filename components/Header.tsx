@@ -147,6 +147,7 @@ import { useEffect, useState } from "react";
 // images
 import Image from "next/image";
 import phoneImage from "@/assets/images/appointment-discount-phone-mockup.png";
+import phoneImageDark from "@/assets/images/appointment-discount-phone-mockup-dark.png";
 import smritiLogo from "@/assets/images/smriti-Logo.png";
 import sLetterImg from "@/assets/images/s-letter.png";
 import { Moon, Sun } from "lucide-react";
@@ -169,10 +170,19 @@ const navigation = [
 ];
 
 export default function Header() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [phoneImg, setPhoneImg] = useState(phoneImage);
+
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  useEffect(() => {
+    resolvedTheme === "dark"
+      ? setPhoneImg(phoneImageDark)
+      : setPhoneImg(phoneImage);
+  });
 
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
@@ -263,7 +273,7 @@ export default function Header() {
       </div>
       <div className="w-full lg:w-fit mx-auto flex items-center justify-center relative ">
         <Image
-          src={phoneImage}
+          src={phoneImg}
           alt={"phone image"}
           className="w-64 md:w-96 h-auto "
         />
