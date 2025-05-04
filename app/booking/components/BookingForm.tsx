@@ -4,10 +4,30 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 // Add other necessary imports here
 import { Button } from "@/components/ui/button";
-import Navbar from "./Navbar";
+import Navbar from "../../../components/Navbar";
 import { DatePickerWithPresets } from "./DatePicker";
+// form
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { bookingSchema, BookingSchema } from "../schemas/bookingSchema";
 
 export default function BookingForm() {
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<BookingSchema>({
+    resolver: zodResolver(bookingSchema),
+  });
+
+  const onSubmit = (data: BookingSchema) => {
+    console.log("Submitted data: ", data);
+    // TODO: call backend API and then redirect to Stripe Checkout
+    reset(); // clear form
+  };
+
   const [date, setDate] = useState<Date>();
   const [formData, setFormData] = useState({
     name: "",
@@ -31,17 +51,17 @@ export default function BookingForm() {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      appointmentDate: "",
-    });
-    setDate(undefined);
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log(formData);
+  //   setFormData({
+  //     name: "",
+  //     email: "",
+  //     phone: "",
+  //     appointmentDate: "",
+  //   });
+  //   setDate(undefined);
+  // };
 
   return (
     <div className="relative isolate px-6 pt-14 lg:px-8 ">
@@ -63,7 +83,7 @@ export default function BookingForm() {
           Book an Appointment
         </h2>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
           <div>
             <label
               htmlFor="name"
@@ -72,15 +92,22 @@ export default function BookingForm() {
               Full Name
             </label>
             <input
+              {...register("name")}
               type="text"
               id="name"
               name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
+              placeholder="John Doe"
+              // value={formData.name}
+              // onChange={handleChange}
+              // required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500
               "
             />
+            {errors.name && (
+              <p className="text-red-500 dark:text-yellow-600">
+                {errors.name.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -94,11 +121,18 @@ export default function BookingForm() {
               type="email"
               id="email"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
+              // value={formData.email}
+              // onChange={handleChange}
+              // required
+              {...register("email")}
+              placeholder="john@example.com"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
+            {errors.email && (
+              <p className="text-red-500 dark:text-yellow-600">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -112,11 +146,18 @@ export default function BookingForm() {
               type="text"
               id="phone"
               name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              required
+              // value={formData.phone}
+              // onChange={handleChange}
+              {...register("phone")}
+              placeholder="+91 9876543210"
+              // required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
+            {errors.phone && (
+              <p className="text-red-500 dark:text-yellow-600">
+                {errors.phone.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -126,13 +167,28 @@ export default function BookingForm() {
             >
               Appointment Date
             </label>
-            <DatePickerWithPresets date={date} setDate={setDate} />
+            <Controller
+              name="appointmentDate"
+              control={control}
+              render={({ field }) => (
+                <DatePickerWithPresets
+                  date={field.value}
+                  setDate={field.onChange}
+                />
+              )}
+            />
+            {errors.appointmentDate && (
+              <p className="text-red-500 dark:text-yellow-600">
+                {errors.appointmentDate.message}
+              </p>
+            )}
+            {/* <DatePickerWithPresets date={date} setDate={setDate} /> */}
           </div>
 
           <div className="mt-6 flex items-center justify-center">
             <Button
               type="submit"
-              variant="solid"
+              variant="default"
               className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-600"
             >
               Book Appointment
