@@ -34,13 +34,13 @@ function Navbar() {
     <>
       <nav
         aria-label="Global"
-        className="flex items-center justify-between p-6 lg:px-8 lg:dark:bg-gray-900"
+        className="flex items-center justify-between p-6 lg:px-8 lg:dark:bg-gray-900 absolute w-full z-50"
       >
         <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 p-1.5">
+          <Link href="/" className="-m-1.5 p-1.5 cursor-pointer">
             <span className="sr-only">Your Company</span>
             <Image alt="S Letter" src={navImg} className="h-8 w-auto" />
-          </a>
+          </Link>
         </div>
         <div className="flex lg:hidden">
           <button
@@ -49,7 +49,7 @@ function Navbar() {
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
           >
             <span className="sr-only">Open main menu</span>
-            <Bars3Icon aria-hidden="true" className="size-6" />
+            <Bars3Icon aria-hidden="true" className="size-6 cursor-pointer" />
           </button>
         </div>
         <div className="hidden lg:flex lg:gap-x-12  lg:items-center ">
@@ -62,7 +62,7 @@ function Navbar() {
               hover:text-gray-500
 
               transition-all
-              duration-200
+              duration-200 cursor-pointer
               "
             >
               {item.name}
@@ -78,7 +78,7 @@ function Navbar() {
               hover:text-gray-500
 
               transition-all
-              duration-200
+              duration-200 cursor-pointer
           "
           >
             Log in <span aria-hidden="true">&rarr;</span>
@@ -147,10 +147,10 @@ function Navbar() {
           }`}
         >
           <div className="flex items-center justify-between">
-            <a href="#" className="-m-1.5 p-1.5">
+            <Link href="/" className="-m-1.5 p-1.5 cursor-pointer">
               <span className="sr-only">Your Company</span>
-              <Image alt="S Letter" src={sLetterImg} className="h-8 w-auto" />
-            </a>
+              <Image alt="S Letter" src={navImg} className="h-8 w-auto" />
+            </Link>
 
             <button
               type="button"
@@ -160,7 +160,7 @@ function Navbar() {
               }`}
             >
               <span className="sr-only">Close menu</span>
-              <XMarkIcon aria-hidden="true" className="size-6" />
+              <XMarkIcon aria-hidden="true" className="size-6 cursor-pointer" />
             </button>
           </div>
 
@@ -174,7 +174,7 @@ function Navbar() {
                     className={`-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold transition-all duration-200 ${
                       theme === "dark"
                         ? "text-slate-500 hover:opacity-90"
-                        : "text-gray-900 hover:bg-gray-50"
+                        : "text-gray-900 hover:bg-gray-50 cursor-pointer"
                     }`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
